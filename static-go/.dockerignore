@@ -1,0 +1,14 @@
+# Go build outputs
+/out
+/bin
+
+# VCS
+.git
+
+# Editor files
+*.swp
+.DS_Store
+
+# Local IDE
+.vscode
+.idea
