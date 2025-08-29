@@ -12,10 +12,16 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./static-go
 
         steps:
             - name: Checkout code
               uses: actions/checkout@v5
+            
+            - name: List files
+              run: ls -la
 
             - name: Set up Go
               uses: actions/setup-go@v4
