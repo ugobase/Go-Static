@@ -26,7 +26,9 @@ func TestEndpoints(t *testing.T) {
 	mux.HandleFunc("/about", servePage("about"))
 	mux.HandleFunc("/contact", servePage("contact"))
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("ok"))
+		if _, err := w.Write([]byte("ok")); err != nil {
+			t.Logf("write response error: %v", err)
+		}
 	})
 
 	for _, tt := range tests {
@@ -49,3 +51,4 @@ func TestEndpoints(t *testing.T) {
 		})
 	}
 }
+
