@@ -8,7 +8,7 @@ image:
   repository: ugobase/go-web
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v1"
+  tag: d0df884d90ed5af2626345da43bcba43a0c11f30-17331151979
 
 service:
   type: LoadBalancer
