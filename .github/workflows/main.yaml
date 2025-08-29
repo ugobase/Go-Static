@@ -112,8 +112,7 @@ jobs:
               with:
                 images: ${{ vars.DOCKERHUB_USERNAME }}/go-web
                 tags: |
-                  type=ref,event=branch
-                  type=semver,pattern={{version}}
+                  type=sha,format=short
                   type=raw,value=v1
 
             - name: Trivy scan source code from Static-go
