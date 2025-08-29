@@ -110,7 +110,7 @@ jobs:
               id: static-go
               uses: docker/metadata-action@v5
               with:
-                images: ${{ vars.DOCKERHUB_USERNAME }}/go-web
+                images: ${{ vars.DOCKER_USERNAME }}/go-web
                 tags: |
                   type=sha,format=short
                   type=raw,value=v1
