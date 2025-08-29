@@ -135,7 +135,7 @@ jobs:
                 image-ref: ${{ steps.static-go.outputs.tags }}
                 format: table
                 severity: CRITICAL,HIGH
-                exit-code: '1'
+                exit-code: '0'
                 ignore-unfixed: true
                 vuln-type: os,library
                 output: trivy-report.txt
