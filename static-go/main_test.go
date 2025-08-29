@@ -1,34 +1,51 @@
 package main
 
 import (
-    "embed"
-    "io/fs"
-    "log"
-    "net/http"
+	"net/http"
+	"net/http/httptest"
+	"testing"
 )
 
-//go:embed static/*.html
-var pages embed.FS
+// TestEndpoints checks all routes in a table-driven test
+func TestEndpoints(t *testing.T) {
+	tests := []struct {
+		name       string
+		path       string
+		wantStatus int
+		wantCT     string
+	}{
+		{"Home", "/home", http.StatusOK, "text/html"},
+		{"About", "/about", http.StatusOK, "text/html"},
+		{"Contact", "/contact", http.StatusOK, "text/html"},
+		{"Health", "/health", http.StatusOK, ""},
+	}
 
-func servePage(name string) http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) {
-        data, err := fs.ReadFile(pages, "static/"+name+".html")
-        if err != nil {
-            http.NotFound(w, r)
-            return
-        }
-        w.Header().Set("Content-Type", "text/html")
-        w.Write(data)
-    }
-}
+	// Setup mux using real handlers
+	mux := http.NewServeMux()
+	mux.HandleFunc("/home", servePage("home"))
+	mux.HandleFunc("/about", servePage("about"))
+	mux.HandleFunc("/contact", servePage("contact"))
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("ok"))
+	})
 
-func main() {
-    mux := http.NewServeMux()
-    mux.HandleFunc("/home", servePage("home"))
-    mux.HandleFunc("/about", servePage("about"))
-    mux.HandleFunc("/contact", servePage("contact"))
-    mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("ok")) })
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, tt.path, nil)
+			w := httptest.NewRecorder()
 
-    log.Println("Server running on :8080")
-    http.ListenAndServe(":8080", mux)
+			mux.ServeHTTP(w, req)
+
+			resp := w.Result()
+			if resp.StatusCode != tt.wantStatus {
+				t.Errorf("expected status %d, got %d", tt.wantStatus, resp.StatusCode)
+			}
+
+			if tt.wantCT != "" {
+				if ct := resp.Header.Get("Content-Type"); ct != tt.wantCT {
+					t.Errorf("expected Content-Type %s, got %s", tt.wantCT, ct)
+				}
+			}
+		})
+	}
 }
