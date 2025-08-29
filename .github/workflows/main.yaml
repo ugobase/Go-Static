@@ -162,6 +162,6 @@ jobs:
 
             - name: Helm Update
               run: |
-                sed -i "s/tag: .*/tag: ${{ github.sha }}-${{ github.run_id }}/" ./helm/static-go/values.yaml
+                sed -i "s/tag: .*/tag: ${{ github.sha }}-${{ github.run_id }}/" ./helm/go-chart/values.yaml
 
             
