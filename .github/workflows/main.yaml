@@ -45,7 +45,7 @@ jobs:
               run: go test ./... -v
 
             - name: Build the application
-              run: go build -o myapp ./...cmd/myapp
+              run: go build -o my-app ./static-go
 
     code-quality:
         runs-on: ubuntu-latest
